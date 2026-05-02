@@ -42,7 +42,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <!--TODO Check vulnerability in the next versions of Spring Boot and delete version tag-->
+            <!--Check vulnerability in the next versions of Spring Boot and delete version tag-->
             <version>42.7.11</version>
             <scope>runtime</scope>
         </dependency>
