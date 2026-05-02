@@ -17,3 +17,6 @@ target/
 *.iws
 *.iml
 *.ipr
+
+### Logs ###
+logs/
