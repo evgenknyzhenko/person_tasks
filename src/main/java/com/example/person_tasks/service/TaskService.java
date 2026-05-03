@@ -3,6 +3,7 @@ package com.example.person_tasks.service;
 import com.example.person_tasks.dto.TaskDto;
 import com.example.person_tasks.dto.TaskUpsertRequest;
 import com.example.person_tasks.entity.Task;
+import com.example.person_tasks.enums.ParticipationType;
 import com.example.person_tasks.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -31,8 +32,8 @@ public class TaskService {
         return TaskDto.toDto(getById(id));
     }
 
-    public TaskDto getTopByLinkedPersons() {
-        return taskRepository.findTasksOrderByPersonCountDesc(PageRequest.of(0, 1)).stream()
+    public TaskDto getTopByLinkedPersons(ParticipationType participationType) {
+        return taskRepository.findTasksOrderByPersonCountDesc(participationType, PageRequest.of(0, 1)).stream()
                 .findFirst()
                 .map(TaskDto::toDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));

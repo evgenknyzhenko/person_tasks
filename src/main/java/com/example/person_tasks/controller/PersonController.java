@@ -4,6 +4,7 @@ import com.example.person_tasks.dto.PersonAddCompanyRequest;
 import com.example.person_tasks.dto.PersonDto;
 import com.example.person_tasks.dto.PersonUpsertRequest;
 import com.example.person_tasks.dto.PersonAddTaskRequest;
+import com.example.person_tasks.enums.ParticipationType;
 import com.example.person_tasks.service.PersonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +32,8 @@ public class PersonController {
     }
 
     @GetMapping("/top-by-tasks")
-    public PersonDto getTopByLinkedTasks() {
-        return personService.getTopByLinkedTasks();
+    public PersonDto getTopByLinkedTasks(@RequestParam(required = false) ParticipationType participationType) {
+        return personService.getTopByLinkedTasks(participationType);
     }
 
     @PostMapping

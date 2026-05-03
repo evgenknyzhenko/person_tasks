@@ -4,6 +4,8 @@ import com.example.person_tasks.dto.CompanyDto;
 import com.example.person_tasks.dto.CompanyUpsertRequest;
 import com.example.person_tasks.dto.TaskDto;
 import com.example.person_tasks.entity.Company;
+import com.example.person_tasks.enums.CompanyPosition;
+import com.example.person_tasks.enums.ParticipationType;
 import com.example.person_tasks.repository.CompanyRepository;
 import com.example.person_tasks.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +35,9 @@ public class CompanyService {
         return CompanyDto.toDto(getById(id));
     }
 
-    public List<TaskDto> getCompanyTasks(UUID companyId) {
+    public List<TaskDto> getCompanyTasks(UUID companyId, CompanyPosition position, ParticipationType participationType) {
         getById(companyId);
-        return taskRepository.findDistinctByCompanyId(companyId).stream()
+        return taskRepository.findDistinctByCompanyIdAndFilters(companyId, position, participationType).stream()
                 .map(TaskDto::toDto)
                 .toList();
     }

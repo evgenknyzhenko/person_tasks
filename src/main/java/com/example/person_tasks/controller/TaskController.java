@@ -2,6 +2,7 @@ package com.example.person_tasks.controller;
 
 import com.example.person_tasks.dto.TaskDto;
 import com.example.person_tasks.dto.TaskUpsertRequest;
+import com.example.person_tasks.enums.ParticipationType;
 import com.example.person_tasks.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,8 @@ public class TaskController {
     }
 
     @GetMapping("/top-by-persons")
-    public TaskDto getTopByPersons() {
-        return taskService.getTopByLinkedPersons();
+    public TaskDto getTopByPersons(@RequestParam(required = false) ParticipationType participationType) {
+        return taskService.getTopByLinkedPersons(participationType);
     }
 
     @PostMapping

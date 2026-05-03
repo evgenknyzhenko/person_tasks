@@ -45,8 +45,8 @@ public class PersonService {
         return PersonDto.toDto(getById(id));
     }
 
-    public PersonDto getTopByLinkedTasks() {
-        return personRepository.findPersonsOrderByTaskCountDesc(PageRequest.of(0, 1)).stream()
+    public PersonDto getTopByLinkedTasks(ParticipationType participationType) {
+        return personRepository.findPersonsOrderByTaskCountDesc(participationType, PageRequest.of(0, 1)).stream()
                 .findFirst()
                 .map(PersonDto::toDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found"));

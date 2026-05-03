@@ -3,6 +3,8 @@ package com.example.person_tasks.controller;
 import com.example.person_tasks.dto.CompanyDto;
 import com.example.person_tasks.dto.CompanyUpsertRequest;
 import com.example.person_tasks.dto.TaskDto;
+import com.example.person_tasks.enums.CompanyPosition;
+import com.example.person_tasks.enums.ParticipationType;
 import com.example.person_tasks.service.CompanyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +32,12 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}/tasks")
-    public List<TaskDto> getCompanyTasks(@PathVariable UUID id) {
-        return companyService.getCompanyTasks(id);
+    public List<TaskDto> getCompanyTasks(
+            @PathVariable UUID id,
+            @RequestParam(required = false) CompanyPosition position,
+            @RequestParam(required = false) ParticipationType participationType
+    ) {
+        return companyService.getCompanyTasks(id, position, participationType);
     }
 
     @PostMapping
