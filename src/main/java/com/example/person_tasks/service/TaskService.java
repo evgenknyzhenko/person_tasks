@@ -4,6 +4,7 @@ import com.example.person_tasks.dto.TaskDto;
 import com.example.person_tasks.dto.TaskUpsertRequest;
 import com.example.person_tasks.entity.Task;
 import com.example.person_tasks.repository.TaskRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +15,10 @@ import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class TaskService {
 
     private final TaskRepository taskRepository;
-
-    public TaskService(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
-    }
 
     public List<TaskDto> list() {
         return taskRepository.findAll().stream()
@@ -29,7 +27,7 @@ public class TaskService {
     }
 
     public TaskDto get(UUID id) {
-        return TaskDto.toDto(getEntity(id));
+        return TaskDto.toDto(getById(id));
     }
 
     @Transactional
@@ -41,7 +39,7 @@ public class TaskService {
 
     @Transactional
     public TaskDto update(UUID id, TaskUpsertRequest request) {
-        Task task = getEntity(id);
+        Task task = getById(id);
         task.setTitle(request.title());
         return TaskDto.toDto(taskRepository.save(task));
     }
@@ -54,7 +52,7 @@ public class TaskService {
         taskRepository.deleteById(id);
     }
 
-    private Task getEntity(UUID id) {
+    public Task getById(UUID id) {
         return taskRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
     }

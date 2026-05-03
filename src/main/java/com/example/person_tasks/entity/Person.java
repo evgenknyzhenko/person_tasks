@@ -8,9 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "person")
@@ -38,9 +36,9 @@ public class Person {
     @Column(name = "version", nullable = false)
     private long version;
 
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CompanyPerson> companyPersons = new HashSet<>();
+    @OneToMany(mappedBy = "person")
+    private List<CompanyPerson> companyPersons = new ArrayList<>();
 
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PersonTask> personTasks = new HashSet<>();
+    @OneToMany(mappedBy = "person")
+    private List<PersonTask> personTasks = new ArrayList<>();
 }

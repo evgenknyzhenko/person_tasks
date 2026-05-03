@@ -4,6 +4,7 @@ import com.example.person_tasks.dto.CompanyDto;
 import com.example.person_tasks.dto.CompanyUpsertRequest;
 import com.example.person_tasks.entity.Company;
 import com.example.person_tasks.repository.CompanyRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +15,10 @@ import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class CompanyService {
 
     private final CompanyRepository companyRepository;
-
-    public CompanyService(CompanyRepository companyRepository) {
-        this.companyRepository = companyRepository;
-    }
 
     public List<CompanyDto> list() {
         return companyRepository.findAll().stream()
@@ -29,7 +27,7 @@ public class CompanyService {
     }
 
     public CompanyDto get(UUID id) {
-        return CompanyDto.toDto(getEntity(id));
+        return CompanyDto.toDto(getById(id));
     }
 
     @Transactional
@@ -41,7 +39,7 @@ public class CompanyService {
 
     @Transactional
     public CompanyDto update(UUID id, CompanyUpsertRequest request) {
-        Company company = getEntity(id);
+        Company company = getById(id);
         company.setName(request.name());
         return CompanyDto.toDto(companyRepository.save(company));
     }
@@ -54,7 +52,7 @@ public class CompanyService {
         companyRepository.deleteById(id);
     }
 
-    private Company getEntity(UUID id) {
+    public Company getById(UUID id) {
         return companyRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found"));
     }

@@ -4,6 +4,7 @@ import com.example.person_tasks.dto.CompanyDto;
 import com.example.person_tasks.dto.CompanyUpsertRequest;
 import com.example.person_tasks.service.CompanyService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,13 +13,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/companies")
+@RequiredArgsConstructor
 public class CompanyController {
 
     private final CompanyService companyService;
-
-    public CompanyController(CompanyService companyService) {
-        this.companyService = companyService;
-    }
 
     @GetMapping
     public List<CompanyDto> list() {
