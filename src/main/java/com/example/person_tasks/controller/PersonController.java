@@ -30,6 +30,11 @@ public class PersonController {
         return personService.get(id);
     }
 
+    @GetMapping("/top-by-tasks")
+    public PersonDto getTopByLinkedTasks() {
+        return personService.getTopByLinkedTasks();
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PersonDto create(@Valid @RequestBody PersonUpsertRequest request) {

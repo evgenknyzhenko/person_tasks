@@ -28,6 +28,11 @@ public class TaskController {
         return taskService.get(id);
     }
 
+    @GetMapping("/top-by-persons")
+    public TaskDto getTopByPersons() {
+        return taskService.getTopByLinkedPersons();
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TaskDto create(@Valid @RequestBody TaskUpsertRequest request) {

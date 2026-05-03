@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.UUID;
@@ -42,6 +43,13 @@ public class PersonService {
 
     public PersonDto get(UUID id) {
         return PersonDto.toDto(getById(id));
+    }
+
+    public PersonDto getTopByLinkedTasks() {
+        return personRepository.findPersonsOrderByTaskCountDesc(PageRequest.of(0, 1)).stream()
+                .findFirst()
+                .map(PersonDto::toDto)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found"));
     }
 
     @Transactional

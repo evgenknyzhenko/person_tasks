@@ -5,6 +5,7 @@ import com.example.person_tasks.dto.TaskUpsertRequest;
 import com.example.person_tasks.entity.Task;
 import com.example.person_tasks.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,13 @@ public class TaskService {
 
     public TaskDto get(UUID id) {
         return TaskDto.toDto(getById(id));
+    }
+
+    public TaskDto getTopByLinkedPersons() {
+        return taskRepository.findTasksOrderByPersonCountDesc(PageRequest.of(0, 1)).stream()
+                .findFirst()
+                .map(TaskDto::toDto)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
     }
 
     @Transactional
