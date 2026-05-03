@@ -6,66 +6,66 @@ import com.example.person_tasks.dto.TaskDto;
 import com.example.person_tasks.entity.Company;
 import com.example.person_tasks.enums.CompanyPosition;
 import com.example.person_tasks.enums.ParticipationType;
-import com.example.person_tasks.repository.CompanyRepository;
-import com.example.person_tasks.repository.TaskRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
 
-@Service
-@Transactional(readOnly = true)
-@RequiredArgsConstructor
-public class CompanyService {
+public interface CompanyService {
 
-    private final CompanyRepository companyRepository;
-    private final TaskRepository taskRepository;
+    /**
+     * Returns all companies.
+     *
+     * @return list of companies as DTOs
+     */
+    List<CompanyDto> findAll();
 
-    public List<CompanyDto> findAll() {
-        return companyRepository.findAll().stream()
-                .map(CompanyDto::toDto)
-                .toList();
-    }
+    /**
+     * Finds a company by identifier.
+     *
+     * @param id company identifier
+     * @return company DTO
+     */
+    CompanyDto findById(UUID id);
 
-    public CompanyDto findById(UUID id) {
-        return CompanyDto.toDto(getById(id));
-    }
+    /**
+     * Returns tasks linked to a company with optional filters.
+     *
+     * @param companyId company identifier
+     * @param position optional company position filter
+     * @param participationType optional participation type filter
+     * @return list of tasks as DTOs
+     */
+    List<TaskDto> getCompanyTasks(UUID companyId, CompanyPosition position, ParticipationType participationType);
 
-    public List<TaskDto> getCompanyTasks(UUID companyId, CompanyPosition position, ParticipationType participationType) {
-        getById(companyId);
-        return taskRepository.findDistinctByCompanyIdAndFilters(companyId, position, participationType).stream()
-                .map(TaskDto::toDto)
-                .toList();
-    }
+    /**
+     * Creates a new company.
+     *
+     * @param request create/update payload
+     * @return created company DTO
+     */
+    CompanyDto create(CompanyUpsertRequest request);
 
-    @Transactional
-    public CompanyDto create(CompanyUpsertRequest request) {
-        Company company = new Company();
-        company.setName(request.name());
-        return CompanyDto.toDto(companyRepository.save(company));
-    }
+    /**
+     * Updates an existing company.
+     *
+     * @param id company identifier
+     * @param request update payload
+     * @return updated company DTO
+     */
+    CompanyDto update(UUID id, CompanyUpsertRequest request);
 
-    @Transactional
-    public CompanyDto update(UUID id, CompanyUpsertRequest request) {
-        Company company = getById(id);
-        company.setName(request.name());
-        return CompanyDto.toDto(companyRepository.save(company));
-    }
+    /**
+     * Deletes a company by identifier.
+     *
+     * @param id company identifier
+     */
+    void delete(UUID id);
 
-    @Transactional
-    public void delete(UUID id) {
-        if (!companyRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found");
-        }
-        companyRepository.deleteById(id);
-    }
-
-    public Company getById(UUID id) {
-        return companyRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found"));
-    }
+    /**
+     * Returns a company entity by identifier.
+     *
+     * @param id company identifier
+     * @return company entity
+     */
+    Company getById(UUID id);
 }

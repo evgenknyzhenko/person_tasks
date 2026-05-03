@@ -4,65 +4,64 @@ import com.example.person_tasks.dto.TaskDto;
 import com.example.person_tasks.dto.TaskUpsertRequest;
 import com.example.person_tasks.entity.Task;
 import com.example.person_tasks.enums.ParticipationType;
-import com.example.person_tasks.repository.TaskRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
 
-@Service
-@Transactional(readOnly = true)
-@RequiredArgsConstructor
-public class TaskService {
+public interface TaskService {
 
-    private final TaskRepository taskRepository;
+    /**
+     * Returns all tasks.
+     *
+     * @return list of tasks as DTOs
+     */
+    List<TaskDto> findAll();
 
-    public List<TaskDto> findAll() {
-        return taskRepository.findAll().stream()
-                .map(TaskDto::toDto)
-                .toList();
-    }
+    /**
+     * Finds a task by identifier.
+     *
+     * @param id task identifier
+     * @return task DTO
+     */
+    TaskDto findById(UUID id);
 
-    public TaskDto findById(UUID id) {
-        return TaskDto.toDto(getById(id));
-    }
+    /**
+     * Returns the top task by number of linked persons.
+     *
+     * @param participationType optional filter by participation type
+     * @return task DTO
+     */
+    TaskDto getTopByLinkedPersons(ParticipationType participationType);
 
-    public TaskDto getTopByLinkedPersons(ParticipationType participationType) {
-        return taskRepository.findTasksOrderByPersonCountDesc(participationType, PageRequest.of(0, 1)).stream()
-                .findFirst()
-                .map(TaskDto::toDto)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
-    }
+    /**
+     * Creates a new task.
+     *
+     * @param request create/update payload
+     * @return created task DTO
+     */
+    TaskDto create(TaskUpsertRequest request);
 
-    @Transactional
-    public TaskDto create(TaskUpsertRequest request) {
-        Task task = new Task();
-        task.setTitle(request.title());
-        return TaskDto.toDto(taskRepository.save(task));
-    }
+    /**
+     * Updates an existing task.
+     *
+     * @param id task identifier
+     * @param request update payload
+     * @return updated task DTO
+     */
+    TaskDto update(UUID id, TaskUpsertRequest request);
 
-    @Transactional
-    public TaskDto update(UUID id, TaskUpsertRequest request) {
-        Task task = getById(id);
-        task.setTitle(request.title());
-        return TaskDto.toDto(taskRepository.save(task));
-    }
+    /**
+     * Deletes a task by identifier.
+     *
+     * @param id task identifier
+     */
+    void delete(UUID id);
 
-    @Transactional
-    public void delete(UUID id) {
-        if (!taskRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
-        }
-        taskRepository.deleteById(id);
-    }
-
-    public Task getById(UUID id) {
-        return taskRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
-    }
+    /**
+     * Returns a task entity by identifier.
+     *
+     * @param id task identifier
+     * @return task entity
+     */
+    Task getById(UUID id);
 }
