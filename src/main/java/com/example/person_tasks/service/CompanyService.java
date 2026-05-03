@@ -2,8 +2,10 @@ package com.example.person_tasks.service;
 
 import com.example.person_tasks.dto.CompanyDto;
 import com.example.person_tasks.dto.CompanyUpsertRequest;
+import com.example.person_tasks.dto.TaskDto;
 import com.example.person_tasks.entity.Company;
 import com.example.person_tasks.repository.CompanyRepository;
+import com.example.person_tasks.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class CompanyService {
 
     private final CompanyRepository companyRepository;
+    private final TaskRepository taskRepository;
 
     public List<CompanyDto> list() {
         return companyRepository.findAll().stream()
@@ -28,6 +31,13 @@ public class CompanyService {
 
     public CompanyDto get(UUID id) {
         return CompanyDto.toDto(getById(id));
+    }
+
+    public List<TaskDto> getCompanyTasks(UUID companyId) {
+        getById(companyId);
+        return taskRepository.findDistinctByCompanyId(companyId).stream()
+                .map(TaskDto::toDto)
+                .toList();
     }
 
     @Transactional

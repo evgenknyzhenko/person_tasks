@@ -2,6 +2,7 @@ package com.example.person_tasks.controller;
 
 import com.example.person_tasks.dto.CompanyDto;
 import com.example.person_tasks.dto.CompanyUpsertRequest;
+import com.example.person_tasks.dto.TaskDto;
 import com.example.person_tasks.service.CompanyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,11 @@ public class CompanyController {
     @GetMapping("/{id}")
     public CompanyDto get(@PathVariable UUID id) {
         return companyService.get(id);
+    }
+
+    @GetMapping("/{id}/tasks")
+    public List<TaskDto> getCompanyTasks(@PathVariable UUID id) {
+        return companyService.getCompanyTasks(id);
     }
 
     @PostMapping
