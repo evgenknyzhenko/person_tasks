@@ -25,13 +25,13 @@ public class CompanyService {
     private final CompanyRepository companyRepository;
     private final TaskRepository taskRepository;
 
-    public List<CompanyDto> list() {
+    public List<CompanyDto> findAll() {
         return companyRepository.findAll().stream()
                 .map(CompanyDto::toDto)
                 .toList();
     }
 
-    public CompanyDto get(UUID id) {
+    public CompanyDto findById(UUID id) {
         return CompanyDto.toDto(getById(id));
     }
 

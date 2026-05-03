@@ -22,13 +22,13 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
 
-    public List<TaskDto> list() {
+    public List<TaskDto> findAll() {
         return taskRepository.findAll().stream()
                 .map(TaskDto::toDto)
                 .toList();
     }
 
-    public TaskDto get(UUID id) {
+    public TaskDto findById(UUID id) {
         return TaskDto.toDto(getById(id));
     }
 

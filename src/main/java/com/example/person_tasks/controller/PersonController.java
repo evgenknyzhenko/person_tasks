@@ -22,13 +22,13 @@ public class PersonController {
     private final PersonService personService;
 
     @GetMapping
-    public List<PersonDto> list() {
-        return personService.list();
+    public List<PersonDto> findAll() {
+        return personService.findAll();
     }
 
     @GetMapping("/{id}")
-    public PersonDto get(@PathVariable UUID id) {
-        return personService.get(id);
+    public PersonDto findById(@PathVariable UUID id) {
+        return personService.findById(id);
     }
 
     @GetMapping("/top-by-tasks")

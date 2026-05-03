@@ -35,13 +35,13 @@ public class PersonService {
     private final PersonTaskRepository personTaskRepository;
     private final PersonCompanyRepository personCompanyRepository;
 
-    public List<PersonDto> list() {
+    public List<PersonDto> findAll() {
         return personRepository.findAll().stream()
                 .map(PersonDto::toDto)
                 .toList();
     }
 
-    public PersonDto get(UUID id) {
+    public PersonDto findById(UUID id) {
         return PersonDto.toDto(getById(id));
     }
 

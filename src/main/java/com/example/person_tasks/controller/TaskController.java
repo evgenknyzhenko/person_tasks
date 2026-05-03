@@ -20,13 +20,13 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping
-    public List<TaskDto> list() {
-        return taskService.list();
+    public List<TaskDto> findAll() {
+        return taskService.findAll();
     }
 
     @GetMapping("/{id}")
-    public TaskDto get(@PathVariable UUID id) {
-        return taskService.get(id);
+    public TaskDto findById(@PathVariable UUID id) {
+        return taskService.findById(id);
     }
 
     @GetMapping("/top-by-persons")

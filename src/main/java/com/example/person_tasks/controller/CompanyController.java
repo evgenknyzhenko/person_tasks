@@ -22,13 +22,13 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @GetMapping
-    public List<CompanyDto> list() {
-        return companyService.list();
+    public List<CompanyDto> findAll() {
+        return companyService.findAll();
     }
 
     @GetMapping("/{id}")
-    public CompanyDto get(@PathVariable UUID id) {
-        return companyService.get(id);
+    public CompanyDto findById(@PathVariable UUID id) {
+        return companyService.findById(id);
     }
 
     @GetMapping("/{id}/tasks")
