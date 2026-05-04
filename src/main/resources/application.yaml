@@ -6,6 +6,9 @@ spring:
     username: ${DB_USERNAME:test}
     password: ${DB_PASSWORD:test}
     driver-class-name: org.postgresql.Driver
+  threads:
+    virtual:
+      enabled: true
   jpa:
     open-in-view: false
     show-sql: false #--> set true for showing SQL scripts in the logs

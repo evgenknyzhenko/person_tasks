@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
-// TODO Add async and virtual threads support
+@EnableAsync
 public class PersonTasksApplication {
 
     public static void main(String[] args) {
