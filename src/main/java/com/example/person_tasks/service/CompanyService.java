@@ -6,8 +6,9 @@ import com.example.person_tasks.dto.TaskDto;
 import com.example.person_tasks.entity.Company;
 import com.example.person_tasks.enums.CompanyPosition;
 import com.example.person_tasks.enums.ParticipationType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface CompanyService {
@@ -17,7 +18,7 @@ public interface CompanyService {
      *
      * @return list of companies as DTOs
      */
-    List<CompanyDto> findAll();
+    Page<CompanyDto> findAll(Pageable pageable);
 
     /**
      * Finds a company by identifier.
@@ -35,7 +36,7 @@ public interface CompanyService {
      * @param participationType optional participation type filter
      * @return list of tasks as DTOs
      */
-    List<TaskDto> getCompanyTasks(UUID companyId, CompanyPosition position, ParticipationType participationType);
+    Page<TaskDto> getCompanyTasks(UUID companyId, CompanyPosition position, ParticipationType participationType, Pageable pageable);
 
     /**
      * Creates a new company.

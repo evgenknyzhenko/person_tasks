@@ -6,10 +6,11 @@ import com.example.person_tasks.enums.ParticipationType;
 import com.example.person_tasks.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -20,8 +21,8 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping
-    public List<TaskDto> findAll() {
-        return taskService.findAll();
+    public Page<TaskDto> findAll(Pageable pageable) {
+        return taskService.findAll(pageable);
     }
 
     @GetMapping("/{id}")

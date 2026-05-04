@@ -5,8 +5,9 @@ import com.example.person_tasks.dto.PersonUpsertRequest;
 import com.example.person_tasks.entity.Person;
 import com.example.person_tasks.enums.CompanyPosition;
 import com.example.person_tasks.enums.ParticipationType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface PersonService {
@@ -16,7 +17,7 @@ public interface PersonService {
      *
      * @return list of persons as DTOs
      */
-    List<PersonDto> findAll();
+    Page<PersonDto> findAll(Pageable pageable);
 
     /**
      * Finds a person by identifier.

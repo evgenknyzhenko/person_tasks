@@ -10,12 +10,13 @@ import com.example.person_tasks.repository.CompanyRepository;
 import com.example.person_tasks.repository.TaskRepository;
 import com.example.person_tasks.service.CompanyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -27,10 +28,9 @@ public class CompanyServiceImpl implements CompanyService {
     private final TaskRepository taskRepository;
 
     @Override
-    public List<CompanyDto> findAll() {
-        return companyRepository.findAll().stream()
-                .map(CompanyDto::toDto)
-                .toList();
+    public Page<CompanyDto> findAll(Pageable pageable) {
+        return companyRepository.findAll(pageable)
+                .map(CompanyDto::toDto);
     }
 
     @Override
@@ -39,11 +39,10 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public List<TaskDto> getCompanyTasks(UUID companyId, CompanyPosition position, ParticipationType participationType) {
+    public Page<TaskDto> getCompanyTasks(UUID companyId, CompanyPosition position, ParticipationType participationType, Pageable pageable) {
         getById(companyId);
-        return taskRepository.findDistinctByCompanyIdAndFilters(companyId, position, participationType).stream()
-                .map(TaskDto::toDto)
-                .toList();
+        return taskRepository.findDistinctPageByCompanyIdAndFilters(companyId, position, participationType, pageable)
+                .map(TaskDto::toDto);
     }
 
     @Override

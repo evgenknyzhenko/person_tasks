@@ -3,6 +3,7 @@ package com.example.person_tasks.repository;
 import com.example.person_tasks.entity.Task;
 import com.example.person_tasks.enums.CompanyPosition;
 import com.example.person_tasks.enums.ParticipationType;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,17 +25,28 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
             Pageable pageable
     );
 
-    @Query("""
-            SELECT DISTINCT t FROM Task t
-            JOIN PersonTask pt ON pt.task = t
-            JOIN CompanyPerson cp ON cp.person = pt.person
-            WHERE cp.company.id = :companyId
-            AND (:position IS NULL OR cp.position = :position)
-            AND (:participationType IS NULL OR pt.participationType = :participationType)
-            """)
-    List<Task> findDistinctByCompanyIdAndFilters(
+    @Query(
+            value = """
+                    SELECT DISTINCT t FROM Task t
+                    JOIN PersonTask pt ON pt.task = t
+                    JOIN CompanyPerson cp ON cp.person = pt.person
+                    WHERE cp.company.id = :companyId
+                    AND (:position IS NULL OR cp.position = :position)
+                    AND (:participationType IS NULL OR pt.participationType = :participationType)
+                    """,
+            countQuery = """
+                    SELECT COUNT(DISTINCT t.id) FROM Task t
+                    JOIN PersonTask pt ON pt.task = t
+                    JOIN CompanyPerson cp ON cp.person = pt.person
+                    WHERE cp.company.id = :companyId
+                    AND (:position IS NULL OR cp.position = :position)
+                    AND (:participationType IS NULL OR pt.participationType = :participationType)
+                    """
+    )
+    Page<Task> findDistinctPageByCompanyIdAndFilters(
             @Param("companyId") UUID companyId,
             @Param("position") CompanyPosition position,
-            @Param("participationType") ParticipationType participationType
+            @Param("participationType") ParticipationType participationType,
+            Pageable pageable
     );
 }

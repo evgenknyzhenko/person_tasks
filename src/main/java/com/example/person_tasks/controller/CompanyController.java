@@ -8,10 +8,11 @@ import com.example.person_tasks.enums.ParticipationType;
 import com.example.person_tasks.service.CompanyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -22,8 +23,8 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @GetMapping
-    public List<CompanyDto> findAll() {
-        return companyService.findAll();
+    public Page<CompanyDto> findAll(Pageable pageable) {
+        return companyService.findAll(pageable);
     }
 
     @GetMapping("/{id}")
@@ -32,12 +33,13 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}/tasks")
-    public List<TaskDto> getCompanyTasks(
+    public Page<TaskDto> getCompanyTasks(
             @PathVariable UUID id,
             @RequestParam(required = false) CompanyPosition position,
-            @RequestParam(required = false) ParticipationType participationType
+            @RequestParam(required = false) ParticipationType participationType,
+            Pageable pageable
     ) {
-        return companyService.getCompanyTasks(id, position, participationType);
+        return companyService.getCompanyTasks(id, position, participationType, pageable);
     }
 
     @PostMapping

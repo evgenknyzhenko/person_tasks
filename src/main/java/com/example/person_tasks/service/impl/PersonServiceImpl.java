@@ -18,13 +18,14 @@ import com.example.person_tasks.service.CompanyService;
 import com.example.person_tasks.service.PersonService;
 import com.example.person_tasks.service.TaskService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -39,10 +40,9 @@ public class PersonServiceImpl implements PersonService {
     private final PersonCompanyRepository personCompanyRepository;
 
     @Override
-    public List<PersonDto> findAll() {
-        return personRepository.findAll().stream()
-                .map(PersonDto::toDto)
-                .toList();
+    public Page<PersonDto> findAll(Pageable pageable) {
+        return personRepository.findAll(pageable)
+                .map(PersonDto::toDto);
     }
 
     @Override

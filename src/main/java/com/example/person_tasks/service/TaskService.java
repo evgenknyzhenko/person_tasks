@@ -4,8 +4,9 @@ import com.example.person_tasks.dto.TaskDto;
 import com.example.person_tasks.dto.TaskUpsertRequest;
 import com.example.person_tasks.entity.Task;
 import com.example.person_tasks.enums.ParticipationType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface TaskService {
@@ -15,7 +16,7 @@ public interface TaskService {
      *
      * @return list of tasks as DTOs
      */
-    List<TaskDto> findAll();
+    Page<TaskDto> findAll(Pageable pageable);
 
     /**
      * Finds a task by identifier.
