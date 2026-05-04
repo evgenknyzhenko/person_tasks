@@ -41,4 +41,7 @@ To populate the database with test data, run the SQL script:
 
 - `src/test/resources/init_test_data.sql`
 
+## API (OpenAPI)
+The REST API is described in the OpenAPI specification file:
 
+- `src/main/resources/openapi.yaml`

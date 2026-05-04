@@ -1,0 +1,714 @@
+openapi: 3.0.3
+info:
+  title: Person Tasks API
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/persons:
+    get:
+      tags:
+        - Persons
+      operationId: getPersons
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: Page of persons
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagePersonDto'
+    post:
+      tags:
+        - Persons
+      operationId: createPerson
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonUpsertRequest'
+      responses:
+        '201':
+          description: Created person
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonDto'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /api/persons/{id}:
+    get:
+      tags:
+        - Persons
+      operationId: getPersonById
+      parameters:
+        - $ref: '#/components/parameters/UuidPathId'
+      responses:
+        '200':
+          description: Person
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonDto'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+        - Persons
+      operationId: updatePerson
+      parameters:
+        - $ref: '#/components/parameters/UuidPathId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonUpsertRequest'
+      responses:
+        '200':
+          description: Updated person
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonDto'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - Persons
+      operationId: deletePerson
+      parameters:
+        - $ref: '#/components/parameters/UuidPathId'
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/persons/top-by-tasks:
+    get:
+      tags:
+        - Persons
+      operationId: getTopPersonByLinkedTasks
+      parameters:
+        - name: participationType
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/ParticipationType'
+      responses:
+        '200':
+          description: Person with the maximum number of linked tasks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonDto'
+  /api/persons/{personId}/companies/{companyId}:
+    post:
+      tags:
+        - Person links
+      operationId: addCompanyLink
+      parameters:
+        - $ref: '#/components/parameters/PersonId'
+        - $ref: '#/components/parameters/CompanyId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonAddCompanyRequest'
+      responses:
+        '204':
+          description: Link added
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - Person links
+      operationId: removeCompanyLink
+      parameters:
+        - $ref: '#/components/parameters/PersonId'
+        - $ref: '#/components/parameters/CompanyId'
+      responses:
+        '204':
+          description: Link removed
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/persons/{personId}/tasks/{taskId}:
+    post:
+      tags:
+        - Person links
+      operationId: addTaskLink
+      parameters:
+        - $ref: '#/components/parameters/PersonId'
+        - $ref: '#/components/parameters/TaskId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonAddTaskRequest'
+      responses:
+        '204':
+          description: Link added
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - Person links
+      operationId: removeTaskLink
+      parameters:
+        - $ref: '#/components/parameters/PersonId'
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '204':
+          description: Link removed
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/tasks:
+    get:
+      tags:
+        - Tasks
+      operationId: getTasks
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: Page of tasks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageTaskDto'
+    post:
+      tags:
+        - Tasks
+      operationId: createTask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpsertRequest'
+      responses:
+        '201':
+          description: Created task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDto'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /api/tasks/{id}:
+    get:
+      tags:
+        - Tasks
+      operationId: getTaskById
+      parameters:
+        - $ref: '#/components/parameters/UuidPathId'
+      responses:
+        '200':
+          description: Task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDto'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+        - Tasks
+      operationId: updateTask
+      parameters:
+        - $ref: '#/components/parameters/UuidPathId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpsertRequest'
+      responses:
+        '200':
+          description: Updated task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDto'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - Tasks
+      operationId: deleteTask
+      parameters:
+        - $ref: '#/components/parameters/UuidPathId'
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/tasks/top-by-persons:
+    get:
+      tags:
+        - Tasks
+      operationId: getTopTaskByLinkedPersons
+      parameters:
+        - name: participationType
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/ParticipationType'
+      responses:
+        '200':
+          description: Task with the maximum number of linked persons
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDto'
+
+  /api/companies:
+    get:
+      tags:
+        - Companies
+      operationId: getCompanies
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: Page of companies
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageCompanyDto'
+    post:
+      tags:
+        - Companies
+      operationId: createCompany
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyUpsertRequest'
+      responses:
+        '201':
+          description: Created company
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyDto'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /api/companies/{id}:
+    get:
+      tags:
+        - Companies
+      operationId: getCompanyById
+      parameters:
+        - $ref: '#/components/parameters/UuidPathId'
+      responses:
+        '200':
+          description: Company
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyDto'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+        - Companies
+      operationId: updateCompany
+      parameters:
+        - $ref: '#/components/parameters/UuidPathId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyUpsertRequest'
+      responses:
+        '200':
+          description: Updated company
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyDto'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - Companies
+      operationId: deleteCompany
+      parameters:
+        - $ref: '#/components/parameters/UuidPathId'
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/companies/{id}/tasks:
+    get:
+      tags:
+        - Companies
+      operationId: getCompanyTasks
+      parameters:
+        - $ref: '#/components/parameters/UuidPathId'
+        - name: position
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/CompanyPosition'
+        - name: participationType
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/ParticipationType'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: Company tasks (filtered by position and/or participation type)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageTaskDto'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  parameters:
+    UuidPathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    PersonId:
+      name: personId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    CompanyId:
+      name: companyId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    TaskId:
+      name: taskId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    Size:
+      name: size
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+        default: 20
+    Sort:
+      name: sort
+      in: query
+      required: false
+      description: Sorting criteria in the format property,(asc|desc). Can be repeated.
+      schema:
+        type: array
+        items:
+          type: string
+      style: form
+      explode: true
+
+  responses:
+    BadRequest:
+      description: Validation error / malformed request
+    NotFound:
+      description: Resource not found
+
+  schemas:
+    ParticipationType:
+      type: string
+      enum:
+        - OWNER
+        - EXECUTOR
+        - REVIEWER
+    CompanyPosition:
+      type: string
+      enum:
+        - DIRECTOR
+        - MANAGER
+        - EMPLOYEE
+
+    PersonUpsertRequest:
+      type: object
+      required:
+        - fullName
+      properties:
+        fullName:
+          type: string
+          minLength: 1
+    TaskUpsertRequest:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          minLength: 1
+    CompanyUpsertRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+
+    PersonAddCompanyRequest:
+      type: object
+      required:
+        - position
+      properties:
+        position:
+          $ref: '#/components/schemas/CompanyPosition'
+    PersonAddTaskRequest:
+      type: object
+      required:
+        - participationType
+      properties:
+        participationType:
+          $ref: '#/components/schemas/ParticipationType'
+
+    PersonDto:
+      type: object
+      required:
+        - id
+        - fullName
+        - createdAt
+        - updatedAt
+        - version
+      properties:
+        id:
+          type: string
+          format: uuid
+        fullName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        version:
+          type: integer
+          format: int64
+
+    TaskDto:
+      type: object
+      required:
+        - id
+        - title
+        - createdAt
+        - updatedAt
+        - version
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        version:
+          type: integer
+          format: int64
+
+    CompanyDto:
+      type: object
+      required:
+        - id
+        - name
+        - createdAt
+        - updatedAt
+        - version
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        version:
+          type: integer
+          format: int64
+
+    PagePersonDto:
+      type: object
+      required:
+        - content
+        - pageable
+        - totalPages
+        - totalElements
+        - last
+        - size
+        - number
+        - sort
+        - first
+        - numberOfElements
+        - empty
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonDto'
+        pageable:
+          $ref: '#/components/schemas/Pageable'
+        totalPages:
+          type: integer
+        totalElements:
+          type: integer
+          format: int64
+        last:
+          type: boolean
+        size:
+          type: integer
+        number:
+          type: integer
+        sort:
+          $ref: '#/components/schemas/Sort'
+        first:
+          type: boolean
+        numberOfElements:
+          type: integer
+        empty:
+          type: boolean
+
+    PageTaskDto:
+      allOf:
+        - $ref: '#/components/schemas/PageBase'
+        - type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/TaskDto'
+
+    PageCompanyDto:
+      allOf:
+        - $ref: '#/components/schemas/PageBase'
+        - type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/CompanyDto'
+
+    PageBase:
+      type: object
+      required:
+        - content
+        - pageable
+        - totalPages
+        - totalElements
+        - last
+        - size
+        - number
+        - sort
+        - first
+        - numberOfElements
+        - empty
+      properties:
+        content:
+          type: array
+          items: {}
+        pageable:
+          $ref: '#/components/schemas/Pageable'
+        totalPages:
+          type: integer
+        totalElements:
+          type: integer
+          format: int64
+        last:
+          type: boolean
+        size:
+          type: integer
+        number:
+          type: integer
+        sort:
+          $ref: '#/components/schemas/Sort'
+        first:
+          type: boolean
+        numberOfElements:
+          type: integer
+        empty:
+          type: boolean
+
+    Pageable:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+        pageSize:
+          type: integer
+        sort:
+          $ref: '#/components/schemas/Sort'
+        offset:
+          type: integer
+          format: int64
+        paged:
+          type: boolean
+        unpaged:
+          type: boolean
+
+    Sort:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
