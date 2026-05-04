@@ -10,4 +10,8 @@ class PersonTasksApplicationTests {
     void contextLoads() {
     }
 
+    //TODO:
+    // - add integration tests,
+    // - implement generation classes and interfaces from openapi.yaml and use it in the Controller layer,
+
 }
